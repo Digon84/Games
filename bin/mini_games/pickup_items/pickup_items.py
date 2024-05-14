@@ -3,24 +3,24 @@ from random import choice, randint
 import os
 
 from bin.game import Game
-from objects.game_objects import Collectable
-from objects.game_characters import Hero
+from bin.objects.game_objects import Collectable
+from bin.objects.game_characters import Hero
 
 DEBUG = False
 
 CHARACTERS = {
     'unicorn': {
-        'files_location': os.path.join('assets', 'unicorn'),
+        'files_location': os.path.join('..', 'assets', 'mini_games', 'pickup_items', 'graphics', 'unicorn'),
         'collectables': ['apple', 'carrot', 'water-bucket'],
         'obstacles': ['stone']
     },
     'santa': {
-        'files_location': os.path.join('assets', 'santa'),
+        'files_location': os.path.join('..', 'assets', 'mini_games', 'pickup_items', 'graphics', 'santa'),
         'collectables': ['car', 'ball', 'cookie', 'doll', 'bear'],
         'obstacles': ['stone']
     },
     'paw_patrol': {
-        'files_location': os.path.join('assets', 'paw_patrol'),
+        'files_location': os.path.join('..', 'assets', 'mini_games', 'pickup_items', 'graphics', 'paw_patrol'),
         'collectables': ['chase', 'everest', 'marshal', 'rubble', 'sky', 'zuma'],
         'obstacles': ['stone']
     }
@@ -35,7 +35,7 @@ VEL = 5
 
 
 class PickupItems(Game):
-    def __init__(self, window, border, controller):
+    def __init__(self, surface, controller, update_state):
         self.controller = controller
         self.heroes_to_chose = []
         self.chosen_character = None
@@ -44,9 +44,12 @@ class PickupItems(Game):
         self.collectables = None
         self.obstacles = None
         self.menu_choice = None
+        self.update_state = update_state
+        border_width, border_height = surface.get_size()
+        self.border = pygame.Rect(0, 100, border_width, border_height - 100)
 
         pygame.display.set_caption("Pick up simple game")
-        super().__init__(window, border)
+        super().__init__(surface)
 
     def init_game(self):
         self.heroes_to_chose = []
@@ -82,6 +85,7 @@ class PickupItems(Game):
                         self.restart_game()
                     if event.key == pygame.K_ESCAPE:
                         run = False
+                        self.update_state('menu')
                 if event.type == pygame.JOYBUTTONDOWN:
                     if self.controller.get_button_values()[1]:
                         self.restart_game()
@@ -93,9 +97,9 @@ class PickupItems(Game):
 
             keys_pressed = pygame.key.get_pressed()
             self.hero_handle_movement(keys_pressed, self.hero)
-            x, y = self.controller.get_axis_x_y_values()
-
-            self.hero_handle_movement_pad(x, y, self.hero)
+            if self.controller is not None:
+                x, y = self.controller.get_axis_x_y_values()
+                self.hero_handle_movement_pad(x, y, self.hero)
             self.handle_collectables_collisions()
             self.menu_choice = self.get_menu_collision()
             self.draw_window()
@@ -182,8 +186,8 @@ class PickupItems(Game):
         for i, key in enumerate(CHARACTERS.keys()):
             hero_image = pygame.image.load(
                 os.path.join(CHARACTERS[key]['files_location'], 'hero.png'))
-
-            self.heroes_to_chose.append(Hero(hero_image, 1500 - 100 * i, 10, key))
+            width, _ = self.surface.get_size()
+            self.heroes_to_chose.append(Hero(hero_image, width - 100 - 100 * i, 10, key))
 
     def _generate_collectables(self):
         collectables = CHARACTERS[self.chosen_character]['collectables']

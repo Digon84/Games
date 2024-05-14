@@ -4,8 +4,8 @@ import random
 from enum import Enum
 
 from bin.game import Game
-from objects.game_characters import Player
-from objects.game_objects import MovingObstacle, EmptySleigh, FallingGifts
+from bin.objects.game_characters import Player
+from bin.objects.game_objects import MovingObstacle, EmptySleigh, FallingGifts
 
 
 class GameState(Enum):
@@ -18,20 +18,25 @@ class GameState(Enum):
 
 
 class SaveTheXmass(Game):
-    def __init__(self, surface, controller):
-        self.window_width, self.window_height = pygame.display.get_surface().get_size()
+    def __init__(self, surface, controller, update_state):
+        self.backup_window_width, self.backup_window_height = surface.get_size()
+        self.window_width, self.window_height = 900, 450
+        pygame.display.set_mode((900, 450))
+        self.surface = pygame.display.get_surface()
         self.controller = controller
         self.player = None
         self.obstacles = None
         self.collectables = None
         self.houses = None
         self.falling_gifts = None
-        self.background_sound = pygame.mixer.Sound('assets/save_the_xmass/music/jingle_bells.3gp')
+        self.update_state = update_state
+        self.background_sound = pygame.mixer.Sound('../assets/mini_games/save_the_xmass/music/jingle_bells.3gp')
         self.background_sound.set_volume(0.5)
         self.background_sound.play(loops=-1)
-        self.pickup_sound = pygame.mixer.Sound('assets/save_the_xmass/music/pickup_sound.mp3')
-        self.hit_sound = pygame.mixer.Sound('assets/save_the_xmass/music/hit.mp3')
+        self.pickup_sound = pygame.mixer.Sound('../assets/mini_games/save_the_xmass/music/pickup_sound.mp3')
+        self.hit_sound = pygame.mixer.Sound('../assets/mini_games/save_the_xmass/music/hit.mp3')
         self.hit_sound.set_volume(0.4)
+        self.run = False
 
         self.background_animation = 0
         self.game_state = GameState.SANTA_RUN
@@ -95,13 +100,13 @@ class SaveTheXmass(Game):
 
     def play_game(self):
         clock = pygame.time.Clock()
-        while True:
+        self.run = True
+        while self.run:
             clock.tick(60)
             # print(clock.get_fps())
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-
+                    self.finish_game()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE and self.game_state == GameState.SANTA_AND_HOUSES:
                         gift = self.player.sprite.get_gift()
@@ -109,6 +114,8 @@ class SaveTheXmass(Game):
                             self.falling_gifts.add(FallingGifts([gift],
                                                                 self.player.sprite.rect.center[0]-80,
                                                                 self.player.sprite.rect.center[1]))
+                    if event.key == pygame.K_ESCAPE:
+                        self.finish_game()
 
                 if event.type == self.obstacle_gift_generation_timer:
                     # print("generating obstacle")
@@ -171,6 +178,12 @@ class SaveTheXmass(Game):
             self.draw_window()
             pygame.display.update()
 
+    def finish_game(self):
+        pygame.display.set_mode((self.backup_window_width, self.backup_window_height))
+        self.background_sound.stop()
+        self.update_state('menu')
+        self.run = False
+
     def collision_obstacles(self):
         if pygame.sprite.spritecollide(self.player.sprite, self.obstacles, True):
             if self.game_state == GameState.SANTA_ENTERING_SLEIGHTS:
@@ -230,42 +243,42 @@ class SaveTheXmass(Game):
                 print("Game End")
 
     def load_surfaces(self):
-        self.background_surface = pygame.image.load('assets/save_the_xmass/background.png').convert()
-        self.background_surface_sky = pygame.image.load('assets/save_the_xmass/background_sky.png').convert()
-        self.ground_surface = pygame.image.load('assets/save_the_xmass/ground.png').convert()
-        self.santa_bag_up = pygame.image.load('assets/save_the_xmass/santa_bag_up.png').convert_alpha()
-        self.santa_bag_down = pygame.image.load('assets/save_the_xmass/santa_bag_down.png').convert_alpha()
-        self.background_surface = pygame.image.load('assets/save_the_xmass/background.png').convert()
-        self.bee_surface = [pygame.image.load('assets/save_the_xmass/obstacles/bee1.png').convert_alpha(),
-                            pygame.image.load('assets/save_the_xmass/obstacles/bee2.png').convert_alpha()]
-        self.tree_surface = pygame.image.load('assets/save_the_xmass/obstacles/tree.png').convert_alpha()
-        self.snow_man_surface = [pygame.image.load('assets/save_the_xmass/obstacles/snow_man.png').convert_alpha(),
-                                 pygame.image.load('assets/save_the_xmass/obstacles/snow_man2.png').convert_alpha(),
-                                 pygame.image.load('assets/save_the_xmass/obstacles/snow_man3.png').convert_alpha(),
-                                 pygame.image.load('assets/save_the_xmass/obstacles/snow_man4.png').convert_alpha(),
-                                 pygame.image.load('assets/save_the_xmass/obstacles/snow_man5.png').convert_alpha(),
-                                 pygame.image.load('assets/save_the_xmass/obstacles/snow_man6.png').convert_alpha()]
-        self.bird_surface = [pygame.image.load('assets/save_the_xmass/obstacles/bird1.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird2.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird3.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird4.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird5.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird6.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird7.png').convert_alpha(),
-                             pygame.image.load('assets/save_the_xmass/obstacles/bird8.png').convert_alpha()]
-        self.gift_blue_surface = pygame.image.load(f'assets/save_the_xmass/pickable/gift_blue.png').convert_alpha()
-        self.gift_red_surface = pygame.image.load(f'assets/save_the_xmass/pickable/gift_red.png').convert_alpha()
-        self.gift_green_surface = pygame.image.load(f'assets/save_the_xmass/pickable/gift_green.png').convert_alpha()
-        self.sleigh_surface = pygame.image.load('assets/save_the_xmass/sleigh/empty/sleigh_empty.png').convert_alpha()
-        self.house_red_surface = pygame.image.load('assets/save_the_xmass/houses/house_red.png').convert_alpha()
-        self.house_blue_surface = pygame.image.load('assets/save_the_xmass/houses/house_blue.png').convert_alpha()
-        self.house_yellow_surface = pygame.image.load('assets/save_the_xmass/houses/house_yellow.png').convert_alpha()
+        self.background_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/background.png').convert()
+        self.background_surface_sky = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/background_sky.png').convert()
+        self.ground_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/ground.png').convert()
+        self.santa_bag_up = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/santa_bag_up.png').convert_alpha()
+        self.santa_bag_down = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/santa_bag_down.png').convert_alpha()
+        self.background_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/background.png').convert()
+        self.bee_surface = [pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bee1.png').convert_alpha(),
+                            pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bee2.png').convert_alpha()]
+        self.tree_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/tree.png').convert_alpha()
+        self.snow_man_surface = [pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/snow_man.png').convert_alpha(),
+                                 pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/snow_man2.png').convert_alpha(),
+                                 pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/snow_man3.png').convert_alpha(),
+                                 pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/snow_man4.png').convert_alpha(),
+                                 pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/snow_man5.png').convert_alpha(),
+                                 pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/snow_man6.png').convert_alpha()]
+        self.bird_surface = [pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird1.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird2.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird3.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird4.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird5.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird6.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird7.png').convert_alpha(),
+                             pygame.image.load('../assets/mini_games/save_the_xmass/graphics/obstacles/bird8.png').convert_alpha()]
+        self.gift_blue_surface = pygame.image.load(f'../assets/mini_games/save_the_xmass/graphics/pickable/gift_blue.png').convert_alpha()
+        self.gift_red_surface = pygame.image.load(f'../assets/mini_games/save_the_xmass/graphics/pickable/gift_red.png').convert_alpha()
+        self.gift_green_surface = pygame.image.load(f'../assets/mini_games/save_the_xmass/graphics/pickable/gift_green.png').convert_alpha()
+        self.sleigh_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/sleigh/empty/sleigh_empty.png').convert_alpha()
+        self.house_red_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/houses/house_red.png').convert_alpha()
+        self.house_blue_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/houses/house_blue.png').convert_alpha()
+        self.house_yellow_surface = pygame.image.load('../assets/mini_games/save_the_xmass/graphics/houses/house_yellow.png').convert_alpha()
         self.house_red_lights_surface = pygame.image.load(
-            'assets/save_the_xmass/houses/house_red_lights.png').convert_alpha()
+            '../assets/mini_games/save_the_xmass/graphics/houses/house_red_lights.png').convert_alpha()
         self.house_blue_lights_surface = pygame.image.load(
-            'assets/save_the_xmass/houses/house_blue_lights.png').convert_alpha()
+            '../assets/mini_games/save_the_xmass/graphics/houses/house_blue_lights.png').convert_alpha()
         self.house_yellow_lights_surface = pygame.image.load(
-            'assets/save_the_xmass/houses/house_yellow_lights.png').convert_alpha()
+            '../assets/mini_games/save_the_xmass/graphics/houses/house_yellow_lights.png').convert_alpha()
 
     @staticmethod
     def calculate_item_starting_point():

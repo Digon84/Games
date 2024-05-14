@@ -1,6 +1,6 @@
 import pygame.sprite
 
-from objects.game_objects import GameObject
+from bin.objects.game_objects import GameObject
 
 CHARACTER_WIDTH, CHARACTER_HEIGHT = 80, 80
 
@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_frames = []
         self.animation_index = 0
         self.hit_status = False
-        self.jump_sound = pygame.mixer.Sound('assets/save_the_xmass/music/jump.mp3')
+        self.jump_sound = pygame.mixer.Sound('../assets/mini_games/save_the_xmass/music/jump.mp3')
         self.jump_sound.set_volume(0.5)
 
         self.gifts = []
@@ -57,54 +57,54 @@ class Player(pygame.sprite.Sprite):
         self.load_fly_frames()
 
     def load_fly_frames(self):
-        fly_images = ['assets/save_the_xmass/santa/flying/fly/fly1.png']
+        fly_images = ['../assets/mini_games/save_the_xmass/graphics/santa/flying/fly/fly1.png']
         for image in fly_images:
             frame = pygame.image.load(image).convert_alpha()
             self.fly_frames.append(frame)
 
     def load_jump_frames(self):
-        jump_images = ['assets/save_the_xmass/santa/running/jump/jump1.png',
-                       'assets/save_the_xmass/santa/running/jump/jump2.png',
-                       'assets/save_the_xmass/santa/running/jump/jump3.png',
-                       'assets/save_the_xmass/santa/running/jump/jump4.png']
+        jump_images = ['../assets/mini_games/save_the_xmass/graphics/santa/running/jump/jump1.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/jump/jump2.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/jump/jump3.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/jump/jump4.png']
         for image in jump_images:
             frame = pygame.image.load(image).convert_alpha()
             self.jump_frames.append(frame)
 
     def load_idle_frames(self):
-        idle_images = ['assets/save_the_xmass/santa/running/idle/idle1.png',
-                       'assets/save_the_xmass/santa/running/idle/idle2.png',
-                       'assets/save_the_xmass/santa/running/idle/idle3.png',
-                       'assets/save_the_xmass/santa/running/idle/idle4.png',
-                       'assets/save_the_xmass/santa/running/idle/idle5.png',
-                       'assets/save_the_xmass/santa/running/idle/idle6.png']
+        idle_images = ['../assets/mini_games/save_the_xmass/graphics/santa/running/idle/idle1.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/idle/idle2.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/idle/idle3.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/idle/idle4.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/idle/idle5.png',
+                       '../assets/mini_games/save_the_xmass/graphics/santa/running/idle/idle6.png']
         for image in idle_images:
             frame = pygame.image.load(image).convert_alpha()
             self.idle_frames.append(frame)
 
     def load_run_frames(self):
-        run_images = ['assets/save_the_xmass/santa/running/run/run1.png',
-                      'assets/save_the_xmass/santa/running/run/run2.png',
-                      'assets/save_the_xmass/santa/running/run/run3.png',
-                      'assets/save_the_xmass/santa/running/run/run4.png',
-                      'assets/save_the_xmass/santa/running/run/run5.png',
-                      'assets/save_the_xmass/santa/running/run/run6.png']
+        run_images = ['../assets/mini_games/save_the_xmass/graphics/santa/running/run/run1.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/run/run2.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/run/run3.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/run/run4.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/run/run5.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/run/run6.png']
         for image in run_images:
             frame = pygame.image.load(image).convert_alpha()
             self.run_frames.append(frame)
 
     def load_hit_frames(self):
-        hit_images = ['assets/save_the_xmass/santa/running/hit/hit1.png',
-                      'assets/save_the_xmass/santa/running/hit/hit2.png',
-                      'assets/save_the_xmass/santa/running/hit/hit3.png']
+        hit_images = ['../assets/mini_games/save_the_xmass/graphics/santa/running/hit/hit1.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/hit/hit2.png',
+                      '../assets/mini_games/save_the_xmass/graphics/santa/running/hit/hit3.png']
         for image in hit_images:
             frame = pygame.image.load(image).convert_alpha()
             self.hit_frames.append(frame)
 
     def load_fly_hit_frames(self):
-        hit_fly_images = ['assets/save_the_xmass/santa/flying/hit/hit1.png',
-                          'assets/save_the_xmass/santa/flying/hit/hit2.png',
-                          'assets/save_the_xmass/santa/flying/hit/hit3.png']
+        hit_fly_images = ['../assets/mini_games/save_the_xmass/graphics/santa/flying/hit/hit1.png',
+                          '../assets/mini_games/save_the_xmass/graphics/santa/flying/hit/hit2.png',
+                          '../assets/mini_games/save_the_xmass/graphics/santa/flying/hit/hit3.png']
         for image in hit_fly_images:
             frame = pygame.image.load(image).convert_alpha()
             self.hit_fly_frames.append(frame)

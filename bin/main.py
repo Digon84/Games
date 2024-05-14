@@ -28,7 +28,7 @@ class Game:
         self.state = game_choice
 
     def start_game(self, game_class):
-        self.game = game_class(self.surface, None)
+        self.game = game_class(self.surface, None, self.update_state)
         self.game.start_game()
 
 

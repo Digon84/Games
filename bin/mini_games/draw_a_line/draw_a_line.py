@@ -30,8 +30,9 @@ POSSIBLE_COLORS = cycle([BLUE, RED, YELLOW, GREEN])
 BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HEIGHT = 0, 100, 1200, 800
 BORDER = pygame.Rect(BORDER_X, BORDER_Y, BORDER_WIDTH, BORDER_HEIGHT)
 
+
 class DrawALine(Game):
-    def __init__(self, surface, controller):
+    def __init__(self, surface, controller, update_state):
         self.controller = controller
         border_width, border_height = surface.get_size()
         self.border = pygame.Rect(0, 100, border_width, border_height - 100)
@@ -39,6 +40,7 @@ class DrawALine(Game):
         self.chosen_character = None
         self.previous_circles = []
         self.chosen_color = next(POSSIBLE_COLORS)
+        self.update_state = update_state
         super().__init__(surface)
 
     def init_game(self):
@@ -84,6 +86,7 @@ class DrawALine(Game):
                         self.restart_game()
                     if event.key == pygame.K_ESCAPE:
                         run = False
+                        self.update_state('menu')
                 if event.type == pygame.JOYBUTTONDOWN:
                     if self.controller is not None and self.controller.get_button_values()[0]:
                         self.chosen_color = next(POSSIBLE_COLORS)

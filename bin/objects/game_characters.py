@@ -17,7 +17,7 @@ class Hero(Character):
         self.collected_items = []
 
 
-class Player(pygame.sprite.Sprite):
+class Santa(pygame.sprite.Sprite):
     MOVE_SPEED = 3
 
     def __init__(self, x, y):

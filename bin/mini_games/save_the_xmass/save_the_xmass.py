@@ -4,7 +4,7 @@ import random
 from enum import Enum
 
 from bin.game import Game
-from bin.objects.game_characters import Player
+from bin.objects.game_characters import Santa
 from bin.objects.game_objects import MovingObstacle, EmptySleigh, FallingGifts
 
 
@@ -59,7 +59,7 @@ class SaveTheXmass(Game):
         self.obstacles.add(MovingObstacle([self.tree_surface],
                                           SaveTheXmass.calculate_item_starting_point(), self.ground_level))
 
-        self.player.add(Player(100, self.ground_level))
+        self.player.add(Santa(100, self.ground_level))
         self.draw_window()
 
     def start_game(self):

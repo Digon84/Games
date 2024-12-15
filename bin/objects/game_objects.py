@@ -1,11 +1,12 @@
 import pygame
 
-OBSTACLE_WIDTH, OBSTACLE_HEIGHT = 40, 40
+
 COLLECTABLE_WIDTH, COLLECTABLE_HEIGHT = 40, 40
 
 
-class GameObject:
+class GameObject(pygame.sprite.Sprite):
     def __init__(self, image, start_x, start_y, width, height):
+        super().__init__()
         self.image = pygame.transform.scale(image, (width, height))
         self.x = start_x
         self.y = start_y
@@ -24,14 +25,18 @@ class GameObject:
 
 
 class Obstacle(GameObject):
-    def __init__(self, image, x, y, width=OBSTACLE_WIDTH, height=OBSTACLE_HEIGHT):
-        super().__init__(image, x, y, width, height)
+    OBSTACLE_WIDTH, OBSTACLE_HEIGHT = 40, 40
+
+    def __init__(self, image, x, y):
+        super().__init__(image, x, y, self.OBSTACLE_WIDTH, self.OBSTACLE_HEIGHT)
         self.can_be_taken = False
 
 
 class Collectable(GameObject):
-    def __init__(self, image, x, y, width=COLLECTABLE_WIDTH, height=COLLECTABLE_HEIGHT):
-        super().__init__(image, x, y, width, height)
+    COLLECTABLE_WIDTH, COLLECTABLE_HEIGHT = 40, 40
+
+    def __init__(self, image, x, y):
+        super().__init__(image, x, y, self.COLLECTABLE_WIDTH, self.COLLECTABLE_HEIGHT)
         self.can_be_taken = True
 
 

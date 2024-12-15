@@ -8,8 +8,8 @@ class Menu:
         self.selected = 0
         self.update_state = update_state
         self.start_game = start_game
-
-        self.font = pygame.font.Font('../assets/menu/fonts/menu.TTF', size=50)
+        print(pygame.font.get_fonts())
+        self.font = pygame.font.SysFont('Arial', size=50)
 
     def draw_menu(self):
         self.draw_items()
@@ -18,9 +18,9 @@ class Menu:
     def draw_items(self):
         for i, item in enumerate(self.games):
             if i == self.selected:
-                item_surface = self.font.render(str(item['name']['en']), False, 'grey')
+                item_surface = self.font.render(str(item['name']['pl']), False, 'grey')
             else:
-                item_surface = self.font.render(str(item['name']['en']), False, 'black')
+                item_surface = self.font.render(str(item['name']['pl']), False, 'black')
             item_position = item_surface.get_rect(midleft=(20, 50 + 70*i))
             self.display_surface.blit(item_surface, item_position)
 

@@ -2,16 +2,55 @@ import pygame.sprite
 
 from bin.objects.game_objects import GameObject
 
-CHARACTER_WIDTH, CHARACTER_HEIGHT = 80, 80
-
 
 class Character(GameObject):
-    def __init__(self, image, x, y, character_type, width=CHARACTER_WIDTH, height=CHARACTER_HEIGHT):
-        super().__init__(image, x, y, width, height)
+    CHARACTER_WIDTH = 80
+    CHARACTER_HEIGHT = 80
+
+    def __init__(self, image, x, y, character_type):
+        super().__init__(image, x, y, self.CHARACTER_WIDTH, self.CHARACTER_HEIGHT)
         self.character_type = character_type
 
 
 class Hero(Character):
+    def __init__(self, image, x, y, character_type):
+        super().__init__(image, x, y, character_type)
+        self.collected_items = []
+
+
+class HeroHorizontal(Hero):
+    def __init__(self, image, x, y, character_type):
+        super().__init__(image, x, y, character_type)
+        self.collected_items = []
+        self.facing_right = True
+        self.direction = pygame.math.Vector2(0, 0)
+        self.speed = 8
+
+    def move_right(self):
+        self.direction.x += self.speed
+
+    def move_left(self):
+        self.direction.x -= self.speed
+
+    def load_frames(self):
+        raise NotImplementedError
+
+
+class HeroVertical(Hero):
+    def __init__(self, image, x, y, character_type):
+        super().__init__(image, x, y, character_type)
+        self.collected_items = []
+        self.direction = pygame.math.Vector2(0, 0)
+        self.speed = 8
+
+    def move_up(self):
+        self.direction.y += self.speed
+
+    def move_down(self):
+        self.direction.y -= self.speed
+
+
+class HeroJumping(HeroHorizontal):
     def __init__(self, image, x, y, character_type):
         super().__init__(image, x, y, character_type)
         self.collected_items = []
